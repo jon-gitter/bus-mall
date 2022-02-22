@@ -1,6 +1,6 @@
 'use strict';
 
-let votesAllowed = 5;
+let votesAllowed = 25;
 
 // array to house objects created from constructor
 let products = [];
@@ -100,12 +100,12 @@ function handleClick(event) {
 
   // stop voting after round has completed 5 times
   if (votesAllowed === 0) {
-    myContainer.removeEventListener('clicks', handleClick);
+    myContainer.removeEventListener('click', handleClick);
   }
 }
 
 // function to show results
-function handleShowResults(event) {
+function handleShowResults() {
   if (votesAllowed === 0) {
     for (let i = 0; i < products.length; i++) {
       let li = document.createElement('li');
