@@ -12,8 +12,10 @@ let imgOne = document.getElementById('img-one');
 let imgTwo = document.getElementById('img-two');
 let imgThree = document.getElementById('img-three');
 
-let resultsButton = document.getElementById('show-results-button');
-let showResults = document.getElementById('display-results-list');
+// let resultsButton = document.getElementById('show-results-button');
+// let showResults = document.getElementById('display-results-list');
+
+let ctx = document.getElementById('results-chart').getContext('2d');
 
 
 
@@ -54,33 +56,61 @@ function getRandomNumber() {
   return Math.floor(Math.random() * products.length);
 }
 
+// let randomIndexes = [];
+
+// function createImgs() {
+
+//   while (randomIndexes.length < 3) {
+//     let randomNum = getRandomImg();
+//     while (!randomIndexes.includes(randomNum)) {
+//       randomIndexes.push(randomNum);
+//     }
+//   }
+//   let itemOne = randomIndexes.pop();
+//   let itemTwo = randomIndexes.pop();
+//   let itemThree = randomIndexes.pop();
+
+// }
+
+let firstImgGroup = [];
+let secondImgGroup = [];
+// console.log(firstImgGroup);
+// console.log(secondImgGroup);
+
 
 // // helper function to render images
 function renderImgs() {
-  let productOneRand = getRandomNumber();
-  let productTwoRand = getRandomNumber();
-  let productThreeRand = getRandomNumber();
-
-  // need help to make this all in one while loop or something shorter
-  while (productOneRand === productTwoRand || productOneRand === productThreeRand || productTwoRand === productThreeRand) {
-    productOneRand = getRandomNumber();
-    productTwoRand = getRandomNumber();
-    productThreeRand = getRandomNumber();
+  if (secondImgGroup.length > 3) {
+    delete secondImgGroup[3];
+    delete secondImgGroup[4];
+    delete secondImgGroup[5];
   }
+  while (firstImgGroup.length < 3) {
+    let numIndex = getRandomNumber();
+    while (!secondImgGroup.includes(numIndex)) {
+      secondImgGroup.unshift(numIndex);
+      firstImgGroup.push(numIndex);
+    }
+  }
+  let itemOne = firstImgGroup.pop();
+  let itemTwo = firstImgGroup.pop();
+  let itemThree = firstImgGroup.pop();
 
-  imgOne.src = products[productOneRand].src;
-  imgOne.alt = products[productOneRand].name;
-  products[productOneRand].views++;
 
-  imgTwo.src = products[productTwoRand].src;
-  imgTwo.alt = products[productTwoRand].name;
-  products[productTwoRand].views++;
+  imgOne.src = products[itemOne].src;
+  imgOne.alt = products[itemOne].name;
+  products[itemOne].views++;
 
-  imgThree.src = products[productThreeRand].src;
-  imgThree.alt = products[productThreeRand].name;
-  products[productThreeRand].views++;
+  imgTwo.src = products[itemTwo].src;
+  imgTwo.alt = products[itemTwo].name;
+  products[itemTwo].views++;
+
+  imgThree.src = products[itemThree].src;
+  imgThree.alt = products[itemThree].name;
+  products[itemThree].views++;
+
+
 }
-
 
 renderImgs();
 
@@ -88,6 +118,7 @@ renderImgs();
 //event listener for clicks
 function handleClick(event) {
   votesAllowed--;
+  // console.log(event);
   let imgClicked = event.target.alt;
 
   for (let i = 0; i < products.length; i++) {
@@ -98,25 +129,72 @@ function handleClick(event) {
 
   renderImgs();
 
-  // stop voting after round has completed 5 times
+  // stop voting after round has completed
   if (votesAllowed === 0) {
     myContainer.removeEventListener('click', handleClick);
+
+    renderChart();
   }
 }
 
 // function to show results
-function handleShowResults() {
-  if (votesAllowed === 0) {
-    for (let i = 0; i < products.length; i++) {
-      let li = document.createElement('li');
-      li.textContent = `${products[i].name} was viewed ${products[i].views} times, and was voted for ${products[i].clicks} times.`;
-      showResults.appendChild(li);
-    }
+// function handleShowResults() {
+//   if (votesAllowed === 0) {
+//     for (let i = 0; i < products.length; i++) {
+//       let li = document.createElement('li');
+//       li.textContent = `${products[i].name} was viewed ${products[i].views} times, and was voted for ${products[i].clicks} times.`;
+//       showResults.appendChild(li);
+//     }
+//   }
+// }
+
+
+
+
+function renderChart() {
+  let productNames = [];
+  let productViews = [];
+  let productClicks = [];
+
+  for (let i = 0; i < products.length; i++) {
+    productNames.push(products[i].name);
+    productViews.push(products[i].views);
+    productClicks.push(products[i].clicks);
   }
+
+
+
+  let chartObject = {
+    type: 'bar',
+    data: {
+      labels: productNames,
+      datasets: [{
+        label: '# of Views',
+        data: productViews,
+        backgroundColor: ['green'],
+        borderColor: ['green'],
+        borderWidth: 1
+      }, {
+        label: '# of Views',
+        data: productClicks,
+        backgroundColor: ['yellow'],
+        borderColor: ['yellow'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+  const myChart = new Chart(ctx, chartObject);
 }
 
 
 
-myContainer.addEventListener('click', handleClick);
 
-resultsButton.addEventListener('click', handleShowResults);
+myContainer.addEventListener('click', handleClick);
+// ctx.addEventListener('click', handleClick);
