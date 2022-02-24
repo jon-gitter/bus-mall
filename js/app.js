@@ -17,6 +17,14 @@ let imgThree = document.getElementById('img-three');
 
 let ctx = document.getElementById('results-chart').getContext('2d');
 
+let retrievedProducts = localStorage.getItem('stringifiedProductsKey');
+
+let parsedProducts = JSON.parse(retrievedProducts);
+
+
+
+
+
 
 
 // constructor
@@ -29,25 +37,31 @@ function Product(name, fileExtension = 'jpg') {
   products.push(this);
 }
 
-new Product('bag');
-new Product('banana');
-new Product('bathroom');
-new Product('boots');
-new Product('breakfast');
-new Product('bubblegum');
-new Product('chair');
-new Product('cthulhu');
-new Product('dog-duck');
-new Product('dragon');
-new Product('pen');
-new Product('pet-sweep');
-new Product('scissors');
-new Product('shark');
-new Product('sweep', 'png');
-new Product('tauntaun');
-new Product('unicorn');
-new Product('water-can');
-new Product('wine-glass');
+if (retrievedProducts) {
+  products = parsedProducts;
+} else {
+  new Product('bag');
+  new Product('banana');
+  new Product('bathroom');
+  new Product('boots');
+  new Product('breakfast');
+  new Product('bubblegum');
+  new Product('chair');
+  new Product('cthulhu');
+  new Product('dog-duck');
+  new Product('dragon');
+  new Product('pen');
+  new Product('pet-sweep');
+  new Product('scissors');
+  new Product('shark');
+  new Product('sweep', 'png');
+  new Product('tauntaun');
+  new Product('unicorn');
+  new Product('water-can');
+  new Product('wine-glass');
+}
+
+
 
 
 
@@ -134,6 +148,11 @@ function handleClick(event) {
     myContainer.removeEventListener('click', handleClick);
 
     renderChart();
+
+    let stringifiedProducts = JSON.stringify(products);
+
+    localStorage.setItem('stringifiedProductsKey', stringifiedProducts);
+
   }
 }
 
