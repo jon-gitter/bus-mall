@@ -1,0 +1,28 @@
+body {
+  background-color: lightgrey;
+}
+
+body h1 {
+  font-size: 50px;
+  margin-left: 600px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: underline;
+}
+
+#container {
+  display: flex;
+  margin-top: 50px;
+}
+
+#container img {
+  width: 400px;
+  padding: 25px; 
+  border: 2px solid;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+canvas {
+  width: 100px;
+  height: 100px;
+}
